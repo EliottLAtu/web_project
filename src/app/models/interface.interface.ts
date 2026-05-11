@@ -1,4 +1,45 @@
-export interface GameDetails{
+export interface nb_joueurs_response {
+    response : {
+        player_count : number
+        response : number
+    }
+}
+export interface steam_info {
+    success : boolean,
+    data : {
+        type : string,
+        name : string,
+        steam_appid : number,
+        required_age : number,
+        isfree : boolean,
+        detailed_description : string,
+        about_the_game : string,
+        short_description : string,
+        header_image : string,
+        website : string,
+        screenshots : {
+            id : number,
+            path_thumbnail : string,
+            path_full : string,
+        }[],
+    }
+        
+        
+}
+
+export interface steam_name_search{
+    total : number,
+    items : {
+        type : string,
+        name : string,
+        id : number
+        price : any[],
+        tiny_image : string,
+        metascore : number,
+        platforms : any[],
+        streamingvideo : boolean,
+        controller_support : string,
+    }[]
 
 }
 
@@ -29,6 +70,6 @@ export interface SearchResult
     count : number,
     next : string,
     previous : string,
-    results : GameDetails[]
+    results : rawgGameDetails[]
 
 }
