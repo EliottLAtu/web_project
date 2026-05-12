@@ -1,2 +1,10 @@
-<input type="text" [(ngModel)]="searchTerm" placeholder="Search..." (keydown.enter)="call()">
-<button type="button" (click)="call()">Rechercher</button> 
+<div class="input-group">
+  <input type="text"
+         class="form-control"
+         [(ngModel)]="searchTerm"
+         placeholder="Search for games..."
+         (keydown.enter)="call()">
+  <button class="btn btn-primary" type="button" (click)="call()">
+    <i class="bi bi-search"></i> Search
+  </button>
+</div> 

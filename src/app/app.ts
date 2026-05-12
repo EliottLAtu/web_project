@@ -4,7 +4,7 @@ import { Search } from './search/search';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, Search],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

@@ -28,23 +28,34 @@ export class Games {
   }
 
   public search_details(name: string) {
+    this.gameDetails.set(null);
+    this.nb_joueurs.set(0);
+
     const url1 = `https://store.steampowered.com/api/storesearch/?term=${encodeURIComponent(name)}&l=english&cc=US`;
     this.http.get<steam_name_search>(url1, {mode: 'cors'}).pipe(take(1)).subscribe({
-      next: (data) => this.steamid =data.items[0].id.toString(),
+      next: (data) => {
+        const item = data.items?.[0];
+        if (!item) {
+          console.error('steam name search failed: no game found');
+          return;
+        }
+
+        this.steamid = item.id.toString();
+        const url2 = 'https://store.steampowered.com/api/appdetails?appids=' + this.steamid + '&l=english';
+        const url3 = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=' + this.steamid;
+
+        this.http.get<steam_info>(url2, {mode: 'cors'}).pipe(take(1)).subscribe({
+          next: (data) => this.gameDetails.set(data),
+          error: (err) => console.error('steam details search failed:', err)
+        });
+
+        this.http.get<nb_joueurs_response>(url3, {mode: 'cors'}).pipe(take(1)).subscribe({
+          next: (data) => this.nb_joueurs.set(data.response.player_count),
+          error: (err) => console.error('steam player number failed:', err)
+        });
+      },
       error: (err) => console.error('steam name search failed:', err)
     });
-    const url2 = 'https://store.steampowered.com/api/appdetails?appids=' + this.steamid + '&l=english';
-    this.http.get<steam_info>(url2, {mode: 'cors'}).pipe(take(1)).subscribe({
-      next: (data) => this.gameDetails.set(data),
-      error: (err) => console.error('steam details search failed:', err)
-    });
-    const url3 = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=' + this.steamid;
-    this.http.get<nb_joueurs_response>(url3, {mode: 'cors'}).pipe(take(1)).subscribe({
-      next: (data) => this.nb_joueurs.set(data.response.player_count),
-      error: (err) => console.error('steam player number failed:', err)
-    });
-    
-
   }
 
 
